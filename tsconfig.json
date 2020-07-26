@@ -1,0 +1,32 @@
+{
+	"version": "3.9",	
+	"compilerOptions": {
+		"strict": true,
+		"target": "es2020",
+		"module": "system"
+	},
+	"include": [
+		"./types/*.d.ts",
+		"./src/**/*",
+		"./src/*"
+	],
+	"tstl": {
+		"luaTarget": "5.1",
+		"luaLibImport": "inline",
+		"noHeader": true,
+		"noImplicitSelf": true,
+		"outFile": "./dist/bundle.lua"
+	},
+	"tstl-watch": {
+		"files": [
+			"main.d.ts",
+			"staff.ts",
+			"./lib/Translate.ts",
+			"./lib/Players.ts",
+			"./lib/PlayerEntity.ts",
+			"./lib/Player.ts",
+			"./lib/Game.ts",
+			"index.ts"
+		]
+	}
+}

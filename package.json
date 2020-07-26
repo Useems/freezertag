@@ -1,0 +1,16 @@
+{
+	"name": "freezertag",
+	"version": "1.0.0",
+	"description": "A minigame for the game Transformice",
+	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ashleygwilliams/my_package.git"
+	},
+	"devDependencies": {
+		"chokidar": "^3.4.0",
+		"typescript-to-lua": "0.28.0"
+	},
+	"author": "Marcos André",
+	"license": "MIT"
+}

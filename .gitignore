@@ -1,0 +1,14 @@
+# Node build artifacts
+node_modules
+npm-debug.log
+
+# VS Code files
+config.code-workspace
+
+# Local development
+*.dev
+.DS_Store
+
+# Docker
+Dockerfile
+docker-compose.yml
