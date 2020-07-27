@@ -82,15 +82,17 @@ class Player extends PlayerEntity {
                     game.removeParticipant(this.playerName);
                 }
             } else {
-                if (!this.isFreezer) 
-                    game.participants_alive--;
-                else
+                if (!this.isFreezer) {
+					game.participants_alive--;
+                } else
                     game.freezers_alive++;
             }
 
             if (!game.ended || (game.freezers_alive === 0 && game.participants_alive === 0))
                 game.check();
-        }
+        } else {
+			this.lifes = 0;
+		}
 
         this.showLifes();
     }
@@ -136,7 +138,7 @@ class Player extends PlayerEntity {
                                     if (target.lifes > 0)
                                         target.chatMessage(string.format(translate("frozen_life"), target.lifes));
                                 }
-                        } else if (target.isFrozen && target.data.isDead && this.canDo("key_space", 5000, false)) {
+                        } else if (target.isFrozen && target.data.isDead && this.canDo("key_space", 6000, false)) {
                             if (game.unfreezePlayer(target)) {
                                 target.chatMessage(string.format(translate("unfreezed"), this.playerName));
 
@@ -185,8 +187,11 @@ class Player extends PlayerEntity {
 
     ban() : boolean {
         if (!this.banned) {
+			game.unfreezePlayer(this);
             this.banned = true;
             this.kill();
+			this.lifes = 0;
+			this.showLifes();
             this.chatMessage(translate("banned"));
 
             return true;

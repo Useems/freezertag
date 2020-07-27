@@ -270,6 +270,8 @@ function Player.prototype.onDied(self)
         if not game.ended or (game.freezers_alive == 0 and game.participants_alive == 0) then
             game:check()
         end
+    else
+        self.lifes = 0
     end
     self:showLifes()
 end
@@ -314,7 +316,7 @@ function Player.prototype.onKeyboard(self, key, pressed, x, y)
                                 end
                             end
                         end
-                    elseif target.isFrozen and target.data.isDead and self:canDo("key_space", 5000, false) then
+                    elseif target.isFrozen and target.data.isDead and self:canDo("key_space", 6000, false) then
                         if game:unfreezePlayer(target) then
                             target:chatMessage(
                                 string.format(
@@ -375,8 +377,11 @@ function Player.prototype.hasPriv(self, priv, message)
 end
 function Player.prototype.ban(self)
     if not self.banned then
+        game:unfreezePlayer(self)
         self.banned = true
         self:kill()
+        self.lifes = 0
+        self:showLifes()
         self:chatMessage(
             translate("banned")
         )
@@ -489,7 +494,6 @@ function Game.prototype.addFrezer(self, player)
         player:chatMessage(
             translate("are_freezer")
         )
-        tfm.exec.setNameColor(player.playerName, 40447)
     end
 end
 function Game.prototype.removeFreezer(self, player)
@@ -513,6 +517,8 @@ function Game.prototype.addParticipant(self, player)
 end
 function Game.prototype.removeParticipant(self, playerName)
     if self.participants[playerName] then
+        self.participants[playerName].lifes = 0
+        self.participants[playerName]:showLifes()
         self.participants[playerName] = nil
         self.participants_alive = self.participants_alive - 1
     end
@@ -596,6 +602,9 @@ Game.prototype["end"] = function(self, whoWon)
             end
             for playerName in pairs(self.frozen) do
                 if self.frozen[playerName].data then
+                    local player = players:get(playerName)
+                    player.lifes = 0
+                    player:showLifes()
                     ui.removeTextArea(self.frozen[playerName].data.id)
                 end
             end
@@ -718,12 +727,35 @@ function eventLoop(current, remaining)
                     end
                 end
             end
+            local toRemove = {}
+            for index in pairs(tfm.get.room.objectList) do
+                if tfm.get.room.objectList[index].id ~= 200 then
+                    toRemove[#toRemove + 1] = tfm.get.room.objectList[index].id
+                end
+            end
+            do
+                local i = 0
+                while i < #toRemove do
+                    tfm.exec.removeObject(toRemove[i + 1])
+                    i = i + 1
+                end
+            end
+        end
+        for playerName in pairs(tfm.get.room.playerList) do
+            local player = players:get(playerName)
+            if player.data and not player.data.isDead then
+                if player.isFreezer then
+                    tfm.exec.setNameColor(playerName, 40447)
+                else
+                    tfm.exec.setNameColor(playerName, 11908533)
+                end
+            end
         end
     else
         for playerName in pairs(tfm.get.room.playerList) do
             if staff[playerName] then
                 local player = players:get(playerName)
-                if player.data and not player.data.isDead then
+                if player.data and not player.data.isDead and not player.isFreezer then
                     if staff[playerName] == 4 then
                         tfm.exec.setNameColor(
                             playerName,

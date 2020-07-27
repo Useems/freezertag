@@ -62,7 +62,6 @@ class Game {
             player.isFreezer = true;
             player.chance = 1;
             player.chatMessage(translate("are_freezer"));
-            tfm.exec.setNameColor(player.playerName, 0x009DFF);
         }
     }
 
@@ -85,8 +84,11 @@ class Game {
 
     removeParticipant(playerName: string) {
         if (this.participants[playerName]) {
+			this.participants[playerName].lifes = 0;
+			this.participants[playerName].showLifes();
             delete this.participants[playerName];
             this.participants_alive--;
+			
         }
     }
 
@@ -166,8 +168,12 @@ class Game {
                     tfm.exec.removeObject(ids[i]);
 
                 for (let playerName in this.frozen)
-                    if (this.frozen[playerName].data)
+                    if (this.frozen[playerName].data) {
+						let player = players.get(playerName);
+						player.lifes = 0;
+						player.showLifes();
                         ui.removeTextArea(this.frozen[playerName].data.id);
+					}
 
                 this.frozen = {};
 

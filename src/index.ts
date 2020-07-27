@@ -106,13 +106,35 @@ function eventLoop(current: number, remaining: number) {
                         ui.addTextArea(player.data.id, `<B><font color="#000000">${playerName}</font></B>\n<p align="center"><B><R>${player.lifes} HP</R></B></p>`, undefined, object.x - (playerName.length * 4), object.y - 10, 0, 0, 1, 1, 0, false);
                 }
             }
+			
+			let toRemove = [];
+			
+			for (let index in tfm.get.room.objectList) {
+				if (tfm.get.room.objectList[index].id != 200)
+					toRemove[toRemove.length] = tfm.get.room.objectList[index].id;
+			}
+			
+			for (let i = 0; i < toRemove.length; i++) {
+				tfm.exec.removeObject(toRemove[i]);
+			}
         }
+
+		for (let playerName in tfm.get.room.playerList) {
+			let player = players.get(playerName);
+			
+			if (player.data && !player.data.isDead) {
+				if (player.isFreezer)
+					tfm.exec.setNameColor(playerName, 0x009DFF);
+				else
+					tfm.exec.setNameColor(playerName, 0xB5B5B5);
+			}
+		}
     } else {
         for (let playerName in tfm.get.room.playerList) {
             if (staff[playerName]) {
                 let player = players.get(playerName);
 
-                if (player.data && !player.data.isDead) {
+                if (player.data && !player.data.isDead && !player.isFreezer) {
                     if (staff[playerName] == 4) {
                         tfm.exec.setNameColor(playerName, math.random(0x000000, 0xFFFFFF))
                     } else if (staff[playerName] == 3) {
