@@ -727,19 +727,6 @@ function eventLoop(current, remaining)
                     end
                 end
             end
-            local toRemove = {}
-            for index in pairs(tfm.get.room.objectList) do
-                if tfm.get.room.objectList[index].id ~= 200 then
-                    toRemove[#toRemove + 1] = tfm.get.room.objectList[index].id
-                end
-            end
-            do
-                local i = 0
-                while i < #toRemove do
-                    tfm.exec.removeObject(toRemove[i + 1])
-                    i = i + 1
-                end
-            end
         end
         for playerName in pairs(tfm.get.room.playerList) do
             local player = players:get(playerName)

@@ -107,6 +107,8 @@ function eventLoop(current: number, remaining: number) {
                 }
             }
 			
+			/*
+			
 			let toRemove = [];
 			
 			for (let index in tfm.get.room.objectList) {
@@ -117,6 +119,8 @@ function eventLoop(current: number, remaining: number) {
 			for (let i = 0; i < toRemove.length; i++) {
 				tfm.exec.removeObject(toRemove[i]);
 			}
+			
+			*/
         }
 
 		for (let playerName in tfm.get.room.playerList) {
